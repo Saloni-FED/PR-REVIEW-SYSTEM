@@ -76,7 +76,7 @@ export async function POST(req) {
 
       // Fetch actual changed files from GitHub
       const cookieStore = cookies();
-      const githubToken = cookieStore.get("token")?.value;
+      const githubToken = cookieStore.get("token");
 
       if (!githubToken) {
         console.log(cookieStore.get("token"), "github token is here");
