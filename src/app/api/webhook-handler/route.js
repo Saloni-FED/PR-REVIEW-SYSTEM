@@ -2,33 +2,27 @@
 import { cookies } from "next/headers";
 import OpenAI from "openai";
 export const reviewPR = async (prData) => {
-  const prompt = `You are an AI reviewer. Please analyze the following pull request:
-        - Title: ${prData.title}
-        - Description: ${prData.body}
-        - Files Changed: ${prData.changed_files}
-        
-        Provide feedback on code quality, style, and best practices. Include any possible improvements.
-      `;
-
   try {
-    const openai = new  OpenAI(process.env.OPENAI_API_KEY)
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+    const diffResponse = await fetch(prData.diff_url);
+    const diff = await diffResponse.text();
+
+    // Use OpenAI to review the PR
+
+    const openai = new OpenAI(process.env.OPENAI_API_KEY);
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
-          content: "You are an experienced code reviewer.",
+          content:
+            "You are a helpful code reviewer. Provide a concise review of the following code changes.",
         },
-        {
-          role: "user",
-          content: prompt,
-        },
+        { role: "user", content: diff },
       ],
-      max_tokens: 500,
     });
 
-    console.log("OpenAI Response:", response);
-    return response.data.choices[0].message.content.trim(); // Trim to remove whitespace
+    const review = completion.choices[0].message.content;
+    return review;
   } catch (error) {
     console.error("Error generating OpenAI review:", error);
     throw new Error("Failed to generate review.");
@@ -72,37 +66,19 @@ export async function POST(req) {
       const prData = payload.pull_request;
       const owner = payload.repository.owner.login;
       const repo = payload.repository.name;
-      const prNumber = prData.number;
+      const prNumber = payload.number;
 
       console.log("New PR created:", prData);
 
       // Fetch actual changed files from GitHub
-      
+
       const githubToken = process.env.GITHUB_ACCESS_TOKEN;
 
-      
-      const filesResponse = await fetch(
-        `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}/files`,
-        {
-          headers: {
-            Authorization: `token ${githubToken}`,
-          },
-        }
-      );
-
-      if (!filesResponse.ok) {
-        throw new Error("Failed to fetch PR files.");
-      }
-
-      const filesData = await filesResponse.json();
-      const changedFiles = filesData.map((file) => file.filename).join(", ");
-
+    
       // Generate AI review
-      const reviewText = await reviewPR({
-        title: prData.title,
-        body: prData.body,
-        changed_files: changedFiles,
-      });
+      const reviewText = await reviewPR(
+       prData
+      );
 
       console.log("Generated Review Text:", reviewText);
 
