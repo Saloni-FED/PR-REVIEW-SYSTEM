@@ -1,9 +1,13 @@
 import axios from "axios";
 import { serialize } from "cookie"; // Import the serialize function from the cookie package
+import { cookies } from "next/headers";
+
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get("code");
+
+  console.log(code, "code is here")
 
   if (!code) {
     return new Response("Authorization code not provided", { status: 400 });
@@ -34,6 +38,13 @@ export async function GET(req) {
       path: "/",  // Cookie will be accessible across your entire site
       maxAge: 60 * 60 * 24 * 7,  // Token will expire after 1 week
     });
+
+    let cookieStore = cookies();
+    let githubToken = cookieStore.get("token").value;
+
+    console.log(githubToken)
+
+
 
     return new Response(null, {
       status: 302,
