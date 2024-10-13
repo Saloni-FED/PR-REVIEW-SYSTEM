@@ -13,7 +13,7 @@ export async function POST(req) {
   }
 
   // The URL where your webhook event handler will be hosted
-  const webhookUrl = 'https://automatic-pr-review-sand.vercel.app/api/webhook-handler';
+  const webhookUrl = 'https://pr-review-system.vercel.app/api/webhook-handler';
 
   try {
     // API URL to create a webhook in the specified repository

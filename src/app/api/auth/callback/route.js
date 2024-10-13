@@ -1,4 +1,5 @@
 import axios from "axios";
+import { cookies } from 'next/headers'
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
@@ -29,7 +30,7 @@ export async function GET(req) {
     console.log(tokenResponse.data, "tokenResponse is here");
 
     // token saved
-   
+    cookies().set('token', accessToken)
 
     // Redirect to /dashboard with a token in the query parameter
     return new Response(null, {
