@@ -75,14 +75,10 @@ export async function POST(req) {
       console.log("New PR created:", prData);
 
       // Fetch actual changed files from GitHub
-      const cookieStore = cookies();
-      const githubToken = cookieStore.get("token");
+      
+      const githubToken = process.env.GITHUB_ACCESS_TOKEN;
 
-      if (!githubToken) {
-        console.log(cookieStore.get("token"), "github token is here");
-        throw new Error("GitHub token is missing.");
-      }
-
+      
       const filesResponse = await fetch(
         `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}/files`,
         {
