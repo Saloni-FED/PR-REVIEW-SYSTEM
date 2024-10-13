@@ -1,5 +1,6 @@
 // In the reviewPR function
 import { cookies } from "next/headers";
+import OpenAI from "openai";
 export const reviewPR = async (prData) => {
   const prompt = `You are an AI reviewer. Please analyze the following pull request:
         - Title: ${prData.title}
@@ -10,8 +11,9 @@ export const reviewPR = async (prData) => {
       `;
 
   try {
-    const response = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
+    const openai = new  OpenAI(process.env.OPENAI_API_KEY)
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
