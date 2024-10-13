@@ -1,5 +1,5 @@
 import axios from "axios";
-import { cookies } from 'next/headers'
+import { serialize } from "cookie"; // Import the serialize function from the cookie package
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
@@ -26,17 +26,20 @@ export async function GET(req) {
     );
 
     const accessToken = tokenResponse.data.access_token;
-    console.log(accessToken, "access token is here ");
-    console.log(tokenResponse.data, "tokenResponse is here");
 
-    // token saved
-    cookies().set('token', accessToken)
+    // Set the cookie manually using the Set-Cookie header
+    const cookie = serialize("token", accessToken, {
+      httpOnly: true,  // This makes it inaccessible via JavaScript
+      secure: process.env.NODE_ENV === "production", // Only set over HTTPS in production
+      path: "/",  // Cookie will be accessible across your entire site
+      maxAge: 60 * 60 * 24 * 7,  // Token will expire after 1 week
+    });
 
-    // Redirect to /dashboard with a token in the query parameter
     return new Response(null, {
       status: 302,
       headers: {
-        Location: `/dashboard?token=${accessToken}`, // Redirect with token as query param
+        "Set-Cookie": cookie,  // Set the cookie in the response header
+        Location: ` /dashboard?token=${accessToken}`,  // Redirect after setting the cookie
       },
     });
   } catch (error) {
