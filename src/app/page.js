@@ -8,7 +8,7 @@ export default function Home() {
 
   return (
     <>
-      <div>Helllo</div>
+      {/* <div>Helllo</div> */}
       <ConnectGithubButton />
     </>
   );
