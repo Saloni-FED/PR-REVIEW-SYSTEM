@@ -18,7 +18,7 @@ export async function GET(req) {
     const tokenResponse = await axios.post(
       "https://github.com/login/oauth/access_token",
       {
-        client_id: process.env.GITHUB_CLIENT_ID, // Use env vars for security
+        client_id: process.env.GITHUB_CLIENT_ID, // Using env vars for security
         client_secret: process.env.GITHUB_CLIENT_SECRET,
         code,
       },

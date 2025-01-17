@@ -15,7 +15,6 @@ import { Github } from "lucide-react";
 const ConnectGithubButton = () => {
     const [error, setError] = useState("")
   const handleConnectGithub = () => {
-    // Replace this URL with your actual OAuth authorization URL
     const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=Ov23li0OuRXZ9xuJy8E6&scope=repo`;
     try {
       window.location.href = githubAuthUrl;
@@ -24,8 +23,8 @@ const ConnectGithubButton = () => {
     }
   };
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Card className="w-[350px]">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 ">
+      <Card className="w-[350px] py-20">
         <CardHeader>
           <CardTitle>Connect to GitHub</CardTitle>
           <CardDescription>

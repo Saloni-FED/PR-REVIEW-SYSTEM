@@ -12,7 +12,7 @@ export async function POST(req) {
     });
   }
 
-  // The URL where your webhook event handler will be hosted
+  // The URL webhook event handler will be hosted
   const webhookUrl = 'https://pr-review-system.vercel.app/api/webhook-handler';
 
   try {
@@ -25,7 +25,7 @@ export async function POST(req) {
       active: true,
       events: ["pull_request"], // Trigger when PR is opened
       config: {
-        url: webhookUrl, // Your webhook handler endpoint
+        url: webhookUrl, //  webhook handler endpoint
         content_type: "json",
       },
     };

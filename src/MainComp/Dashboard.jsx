@@ -52,7 +52,7 @@ function Dashboard() {
       ) : (
         <p>No access token provided.</p>
       )}
-      {/* <Button onClick={createWebhook}>Generate Connection</Button> */}
+      <Button onClick={createWebhook}>Generate Connection</Button>
     </div>
   );
 }
